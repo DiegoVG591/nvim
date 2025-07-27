@@ -42,9 +42,7 @@ return {
     end
     
     local cmp_lsp = require("cmp_nvim_lsp")
-    local capabilities = vim.tbl_deep_extend(
-      "force",
-      {},
+    local capabilities = vim.tbl_deep_extend("force", {},
       vim.lsp.protocol.make_client_capabilities(),
       cmp_lsp.default_capabilities()
     )
@@ -56,7 +54,6 @@ return {
         "lua_ls", 
         "rust_analyzer", 
        	"gopls", 
-        "typescript-language-server",
        	"clangd", 
     	"pyright",
         "html",
@@ -69,7 +66,15 @@ return {
       	    on_attach = on_attach,       -- Pass your keymaps
             capabilities = capabilities  -- Pass the cmp capabilities
       	  } 
+        -- This provides the special settings needed for Unity
       	end,
+        ["omnisharp"] = function()
+          require("lspconfig").omnisharp.setup {
+            on_attach = on_attach,
+            capabilities = capabilities,
+            cmd = { "omnisharp", "--languageserver", "--hostPID", tostring(vim.fn.getpid()) },
+          }
+        end,
       }
     })
 
