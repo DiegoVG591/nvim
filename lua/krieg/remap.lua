@@ -49,6 +49,23 @@ vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
+-- automate compiling
+vim.keymap.set("n", "<leader>r", function()
+
+  -- Call the external script and pass the full path of the current file
+
+  local script_path = vim.fn.expand("~/mysystem/scripts/run-file.sh")
+  local current_file = vim.fn.expand("%:p")
+
+  local command = string.format("!%s %s",
+    vim.fn.shellescape(script_path),
+    vim.fn.shellescape(current_file)
+  )
+
+  vim.cmd(command)
+
+end, { noremap = true, silent = false, desc = "[R]un File" }) 
+
 vim.keymap.set(
     "n",
     "<leader>ee",
