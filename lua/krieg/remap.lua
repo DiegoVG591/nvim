@@ -49,22 +49,34 @@ vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
--- automate compiling
-vim.keymap.set("n", "<leader>r", function()
+--- AUTO RUN SRC'S ---
+local function run_current(pager_flag)
+    --- LOCAL VARIABLES ---
+    local script_path = vim.fn.expand("~/mysystem/scripts/run-src")
+    local current_file = vim.fn.expand("%:p")
+    local command
 
-  -- Call the external script and pass the full path of the current file
+    --- MAIN BODY ---
+    if vim.bo.filetype == "netrw" then
+        local dir = vim.b.netrw_curdir
+        local choice = vim.fn.confirm("Run all scripts in this dir?", "&Yes\n&No")
+        if choice ~= 1 then
+            print("Aborted")
+            return
+        end
 
-  local script_path = vim.fn.expand("~/mysystem/scripts/run-file.sh")
-  local current_file = vim.fn.expand("%:p")
+        command = string.format('!tmux new-window "%s %s %s/*; read -r _"', script_path, pager_flag, dir)
+    else
+        command = string.format('!tmux new-window "%s %s %s; read -r _"', script_path, pager_flag, current_file)
+    end
+    vim.cmd(command)
+    vim.cmd("redraw!")
+end
 
-  local command = string.format("!%s %s",
-    vim.fn.shellescape(script_path),
-    vim.fn.shellescape(current_file)
-  )
+--- autocompiling calls ---
+vim.keymap.set("n", "<leader>r", function() run_current("") end, { desc = "[R]un File" })
+vim.keymap.set("n", "<leader>R", function() run_current("-p") end, { desc = "[R]un File" })
 
-  vim.cmd(command)
-
-end, { noremap = true, silent = false, desc = "[R]un File" }) 
 
 vim.keymap.set(
     "n",
@@ -97,4 +109,3 @@ end)
 vim.keymap.set("n", "<leader><leader>", function()
     vim.cmd("so")
 end)
-
