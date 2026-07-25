@@ -102,7 +102,7 @@ vim.keymap.set(
     "oif err != nil {<CR>}<Esc>O.logger.Error(\"error\", \"error\", err)<Esc>F.;i"
 )
 
-vim.keymap.set("n", "<leader>ca", function()
+vim.keymap.set("n", "<leader>mr", function()
     require("cellular-automaton").start_animation("make_it_rain")
 end)
 
