@@ -7,7 +7,7 @@ return {
         opts = {
             --- For Conda environment named "jupynium",
             -- python_host = { "conda", "run", "--no-capture-output", "-n", "jupynium", "python" },
-            python_host = "/home/krieg/.virtualenvs/jupynium/bin/python",
+            python_host = "jupynium-python",
 
             default_notebook_URL = "localhost:8888/nbclassic",
 
